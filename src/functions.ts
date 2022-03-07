@@ -23,7 +23,7 @@ export const createFunctions = async (options: Options, manifest: any) => {
     // }
 
     if (!fnDef.source_file) {
-      throw new Error(`Run on Slack function provided for ${fnDef.id}, but no source_file was provided.`)
+      throw new Error(`Run on Slack function provided for ${fnId}, but no source_file was provided.`)
     }
 
     const fnFilePath = path.join(options.workingDirectory, fnDef.source_file);
@@ -56,7 +56,7 @@ export const createFunctions = async (options: Options, manifest: any) => {
       await Deno.writeTextFile(fnSourcemapPath, result.files["deno:///bundle.js.map"]);
     }catch(e) {
       options.log(e);
-      throw new Error(`Error writing bundled function file: ${fnDef.id}`, e)
+      throw new Error(`Error writing bundled function file: ${fnId}`, e)
     }
   }
 }
