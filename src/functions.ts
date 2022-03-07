@@ -1,4 +1,5 @@
 import * as path from "https://deno.land/std@0.127.0/path/mod.ts";
+import { ensureDir } from "https://deno.land/std@0.128.0/fs/mod.ts"
 import { Options } from './types.ts';
 
 // deno-lint-ignore no-explicit-any
@@ -9,7 +10,7 @@ export const createFunctions = async (options: Options, manifest: any) => {
 
   // Ensure functions directory exists
   const functionsPath = path.join(options.outputDirectory, 'functions');
-  await Deno.mkdir(functionsPath);
+  await ensureDir(functionsPath);
 
   // Find all the run on slack functions
   for (const fnId in manifest.functions) {

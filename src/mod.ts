@@ -31,7 +31,7 @@ const run = async() => {
   }
   
   options.log(options);
-  
+
   // Generate Manifest
   const generatedManifest = await createManifest(options);
 
