@@ -7,26 +7,38 @@ import { Options } from './types.ts'
 const run = async() => {
   const start = Date.now();
   // We could add additional arguments to indicate things like only generate the manifest, or only functions
-  const { source, output } = parse(Deno.args);
+  const { source, output, manifest: manifestOnly = false } = parse(Deno.args);
 
-  const workingDirectory = path.join(Deno.cwd(), source);
-  const outputDirectory = path.join(Deno.cwd(), output);
+  // Not output required but only when only the manifest is being generated as it's printed to stdout
+  if (!output && !manifestOnly) {
+    throw new Error('An output option must be specified the --manifest flag is not set')
+  }
 
-  // TODO: We could incorporate reading in a cli.json file if present, and respect anything there that's relevant
-  // such as a `manifestFile` property that specifies a manifest locaiton
+  const workingDirectory = path.join(Deno.cwd(), source||"");
+  const outputDirectory = output ? path.join(Deno.cwd(), output||"") : undefined;
 
   const options: Options = {
+    manifestOnly,
     workingDirectory,
     outputDirectory,
+    // deno-lint-ignore no-explicit-any
+    log: (...args: any) => console.log(...args),
   }
-  console.log('options', options)
+
+  // Disable logging to stdout if we're outputing a manifest.json file to stdout
+  if(options.manifestOnly) {
+    options.log = () => {}
+  }
 
   // Generate Manifest
-  const manifest = await createManifest(options);
+  const generatedManifest = await createManifest(options);
 
-  await createFunctions(options, manifest);
+  if (!options.manifestOnly) {
+    await createFunctions(options, generatedManifest);
+  }
+
   const duration = Date.now() - start;
-  console.log(`duration: ${duration}ms`)
+  options.log(`duration: ${duration}ms`);
 }
 
 run();

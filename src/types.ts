@@ -1,6 +1,7 @@
 
 export type Options = {
-  manifestFile?: string,
+  manifestOnly: boolean,
   workingDirectory: string,
-  outputDirectory: string,
+  outputDirectory?: string,
+  log: (...args: any) => void,
 }
