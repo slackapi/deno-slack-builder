@@ -7,15 +7,15 @@ import { Options } from './types.ts'
 const run = async() => {
   const start = Date.now();
   // We could add additional arguments to indicate things like only generate the manifest, or only functions
-  const { source, output, manifest: manifestOnly = false } = parse(Deno.args);
+  let { source, output, manifest: manifestOnly = false } = parse(Deno.args);
 
-  // Not output required but only when only the manifest is being generated as it's printed to stdout
+  // If we're generating functions, default output to a relative dist folder
   if (!output && !manifestOnly) {
-    throw new Error('An output option must be specified the --manifest flag is not set')
+    output = "dist";
   }
 
-  const workingDirectory = path.isAbsolute(source||"") ? source : path.join(Deno.cwd(), source||"");
   const outputDirectory = output ? (path.isAbsolute(output) ? output : path.join(Deno.cwd(), output||"")) : undefined;
+  const workingDirectory = path.isAbsolute(source || "") ? source : path.join(Deno.cwd(), source || "");
 
   const options: Options = {
     manifestOnly,
