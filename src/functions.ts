@@ -8,9 +8,11 @@ export const createFunctions = async (options: Options, manifest: any) => {
   for (const fnId in manifest.functions) {
     const fnDef = manifest.functions[fnId];
 
-    if (fnDef.runtime_environment !== 'slack') {
-      continue;
-    }
+    // For now we'll bundle all functions until this is available on a manifest
+    // TODO: add this check back once we add it to the manifest definition
+    // if (fnDef.runtime_environment !== 'slack') {
+    //   continue;
+    // }
 
     if (!fnDef.source_file) {
       throw new Error(`Run on Slack function provided for ${fnDef.id}, but no source_file was provided.`)

@@ -9,6 +9,7 @@ const DENO_RUNTIME_DEFAULT = 'deno1.x';
 
 export const createManifest = async (options: Options) => {
   let foundManifest = false;
+  // deno-lint-ignore no-explicit-any
   let manifest: any = {};
 
   const manifestJSON = await readManifestJSONFile(options);
@@ -40,20 +41,23 @@ export const createManifest = async (options: Options) => {
     manifest.runtime = DENO_RUNTIME_DEFAULT;
   }
 
-  // If no output was provided, print to stdout
-  if (!options.outputDirectory) {
-    // We explicitly are writing this to stdout here, not using log()
-    console.log(JSON.stringify(manifest, null, 2));
-  }else {
-    await Deno.writeTextFile(path.join(options.outputDirectory, 'manifest.json'), JSON.stringify(manifest, null, 2));
-    options.log(`wrote manifest.json`);
-  }
-    
   return manifest;
+}
+
+// Remove any properties in the manifest specific to the tooling that don't belong in the API payloads
+// deno-lint-ignore no-explicit-any
+export const cleanManifest = (manifest: any) =>{
+  for (const fnId in manifest.functions) {
+    const fnDef = manifest.functions[fnId];
+    delete fnDef.source_file;
+  }
+
+  return manifest
 }
 
 async function readManifestJSONFile (options: Options) {
     // Look for manifest.json in working directory
+    // deno-lint-ignore no-explicit-any
     let manifestJSON: any = {};
     const manifestJSONFilePath = path.join(options.workingDirectory, 'manifest.json');
     // - use as baseline
@@ -81,6 +85,7 @@ async function readManifestJSONFile (options: Options) {
 async function readImportedManifestFile(options: Options, filename: string) {
   // Look for manifest.js in working directory
   // - if present, default export should be a manifest json object
+  // deno-lint-ignore no-explicit-any
   let manifestJS: any = {};
   const manifestJSFilePath = path.join(options.workingDirectory, filename);
   // - use as baseline
