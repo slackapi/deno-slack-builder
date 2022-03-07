@@ -3,8 +3,15 @@ import { Options } from './types.ts';
 
 // deno-lint-ignore no-explicit-any
 export const createFunctions = async (options: Options, manifest: any) => {
-  // Find all the run on slack functions
+  if (!options.outputDirectory) {
+    throw new Error('Cannot build function files if no output option is provided');
+  }
 
+  // Ensure functions directory exists
+  const functionsPath = path.join(options.outputDirectory, 'functions');
+  await Deno.mkdir(functionsPath);
+
+  // Find all the run on slack functions
   for (const fnId in manifest.functions) {
     const fnDef = manifest.functions[fnId];
 
@@ -36,10 +43,6 @@ export const createFunctions = async (options: Options, manifest: any) => {
       bundle: "module",
       check: false,
     });
-
-    if (!options.outputDirectory) {
-      throw new Error('Cannot build function files if no output option is provided');
-    }
 
     // Write FN File and sourcemap file
     const fnFileRelative = path.join('functions', `${fnId}.js`);

@@ -14,8 +14,8 @@ const run = async() => {
     throw new Error('An output option must be specified the --manifest flag is not set')
   }
 
-  const workingDirectory = path.join(Deno.cwd(), source||"");
-  const outputDirectory = output ? path.join(Deno.cwd(), output||"") : undefined;
+  const workingDirectory = path.isAbsolute(source||"") ? source : path.join(Deno.cwd(), source||"");
+  const outputDirectory = output ? (path.isAbsolute(output) ? output : path.join(Deno.cwd(), output||"")) : undefined;
 
   const options: Options = {
     manifestOnly,
@@ -24,12 +24,14 @@ const run = async() => {
     // deno-lint-ignore no-explicit-any
     log: (...args: any) => console.log(...args),
   }
-
+  
   // Disable logging to stdout if we're outputing a manifest.json file to stdout
   if(options.manifestOnly) {
     options.log = () => {}
   }
-
+  
+  options.log(options);
+  
   // Generate Manifest
   const generatedManifest = await createManifest(options);
 
