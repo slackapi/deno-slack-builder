@@ -1,6 +1,7 @@
 import * as path from "https://deno.land/std@0.127.0/path/mod.ts";
 import { Options } from './types.ts';
 
+// deno-lint-ignore no-explicit-any
 export const createFunctions = async (options: Options, manifest: any) => {
   // Find all the run on slack functions
 
@@ -34,17 +35,21 @@ export const createFunctions = async (options: Options, manifest: any) => {
       check: false,
     });
 
+    if (!options.outputDirectory) {
+      throw new Error('Cannot build function files if no output option is provided');
+    }
+
     // Write FN File and sourcemap file
     const fnFileRelative = path.join('functions', `${fnId}.js`);
     const fnBundledPath = path.join(options.outputDirectory, fnFileRelative);
     const fnSourcemapPath = path.join(options.outputDirectory, 'functions', `${fnId}.js.map`);
     
-    console.log(`wrote function file: ${fnFileRelative}`)
+    options.log(`wrote function file: ${fnFileRelative}`)
     try {
       await Deno.writeTextFile(fnBundledPath, result.files["deno:///bundle.js"]);
       await Deno.writeTextFile(fnSourcemapPath, result.files["deno:///bundle.js.map"]);
     }catch(e) {
-      console.log(e);
+      options.log(e);
       throw new Error(`Error writing bundled function file: ${fnDef.id}`, e)
     }
   }

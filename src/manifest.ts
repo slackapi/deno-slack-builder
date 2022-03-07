@@ -8,11 +8,13 @@ const DENO_RUNTIME_DEFAULT = 'deno1.x';
 // and placing a manifest.json in the root of the output directory
 
 export const createManifest = async (options: Options) => {
+  let foundManifest = false;
   let manifest: any = {};
 
   const manifestJSON = await readManifestJSONFile(options);
   if (manifestJSON !== false) {
     manifest = deepMerge(manifest, manifestJSON);
+    foundManifest = true;
   }
 
   // First check if there's a manifest.ts file
@@ -22,9 +24,15 @@ export const createManifest = async (options: Options) => {
     const manifestJS = await readImportedManifestFile(options, 'manifest.js');
     if (manifestJS !== false) {
       manifest = deepMerge(manifest, manifestJS);
+      foundManifest = true;
     }
   }else {
     manifest = deepMerge(manifest, manifestTS);
+    foundManifest = true;
+  }
+
+  if (!foundManifest) {
+    throw new Error('Could not find a manifest.json, manifest.ts or manifest.json file');
   }
 
   if(!manifest.runtime) {
@@ -32,9 +40,14 @@ export const createManifest = async (options: Options) => {
     manifest.runtime = DENO_RUNTIME_DEFAULT;
   }
 
-  // TODO: should this just happen in the createManifest 
-  await Deno.writeTextFile(path.join(options.outputDirectory, 'manifest.json'), JSON.stringify(manifest, null, 2));
-  console.log(`wrote manifest.json`);
+  // If no output was provided, print to stdout
+  if (!options.outputDirectory) {
+    // We explicitly are writing this to stdout here, not using log()
+    console.log(JSON.stringify(manifest, null, 2));
+  }else {
+    await Deno.writeTextFile(path.join(options.outputDirectory, 'manifest.json'), JSON.stringify(manifest, null, 2));
+    options.log(`wrote manifest.json`);
+  }
     
   return manifest;
 }
@@ -47,12 +60,11 @@ async function readManifestJSONFile (options: Options) {
 
     try {
       const { isFile } = await Deno.stat(manifestJSONFilePath);
-      console.log('manifest.json', isFile);
 
       if (!isFile) {
           return false;
       }
-    }catch(e) {
+    }catch(_e) {
       return false;
     }
 
@@ -75,12 +87,11 @@ async function readImportedManifestFile(options: Options, filename: string) {
 
   try {
     const { isFile } = await Deno.stat(manifestJSFilePath);
-    console.log(filename, isFile);
 
     if (!isFile) {
       return false;
     }
-  } catch (e) {
+  } catch (_e) {
     return false;
   }
 

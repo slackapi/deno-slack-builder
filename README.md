@@ -2,24 +2,22 @@
 
 Library for building a Run on Slack Deno project. The artifacts produced from this library are what can be deployed as a Run on Slack project.
 
-The top level `mod.ts` file can be run as a Deno program. It takes 2 command line arguments:
+The top level `mod.ts` file can be run as a Deno program. It takes up to 3 command line arguments:
 
-* `--source="/path/to/project/"`
-* `--output="/path/to/build/artifacts/"`
+* `--source="relative/path/to/project"` Where the builder will look for relevant files. Defaults to the current working directory
+* `--output="relative/path/to/output/"` Where ouput files will be written. Optional if `--manifest` is set. Will print to stdout out if omitted
+* `--manifest` Will only generate the manifest.json file
 
 ```
-deno run --unstable --allow-write --allow-read ./src/mod.ts --source="samples/a" --output="dist/a"
+deno run -q --unstable --allow-write --allow-read ./src/mod.ts --source="samples/a" --output="dist/a"
 ```
-
-
-The `source` path will be used for where the builder will look for relevant files. The `output` path is where ouput files will be written.
 
 
 1. Generates a `manifest.json` file in the `output` directory.
 
 2. Bundles any functions with `remote_environment=slack` w/ Deno into the `output` directory in a structure our runtime layer expects.
 
-## Manifest Generation
+## Manifest Generation Logic
 Allows for flexibility with how you define your manifest.
 
 * Looks for a `manifest.json` file. If it exists, use it.
