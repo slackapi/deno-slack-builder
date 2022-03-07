@@ -1,6 +1,6 @@
 import { parse } from "https://deno.land/std@0.127.0/flags/mod.ts";
 import * as path from "https://deno.land/std@0.127.0/path/mod.ts";
-import { createManifest } from './manifest.ts';
+import { createManifest, cleanManifest } from './manifest.ts';
 import { createFunctions } from './functions.ts'
 import { Options } from './types.ts'
 
@@ -35,6 +35,17 @@ const run = async() => {
 
   if (!options.manifestOnly) {
     await createFunctions(options, generatedManifest);
+  }
+
+  const prunedManifest = cleanManifest(generatedManifest);
+
+  // If no output was provided, print to stdout
+  if (!options.outputDirectory) {
+    // We explicitly are writing this to stdout here, not using log()
+    console.log(JSON.stringify(prunedManifest, null, 2));
+  } else {
+    await Deno.writeTextFile(path.join(options.outputDirectory, 'manifest.json'), JSON.stringify(prunedManifest, null, 2));
+    options.log(`wrote manifest.json`);
   }
 
   const duration = Date.now() - start;
