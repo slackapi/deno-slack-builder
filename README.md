@@ -4,6 +4,8 @@ Library for building a Run on Slack Deno project. The artifacts produced from th
 
 ## Quickstart
 
+_**Note:** The examples below use version `0.0.5` of `deno-slack-builder`; check the [Releases](https://github.com/slackapi/deno-slack-builder/releases) page and be sure to use the latest version._
+
 In a directory that contains a valid manifest file (`manifest.json` or `manifest.ts`), run the following:
 
 ```
