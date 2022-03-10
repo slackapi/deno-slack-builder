@@ -2,23 +2,46 @@
 
 Library for building a Run on Slack Deno project. The artifacts produced from this library are what can be deployed as a Run on Slack project.
 
-The top level `mod.ts` file can be run as a Deno program. It takes up to 3 command line arguments:
+## Quickstart
 
-* `--manifest` If passed, will only generate the manifest and skip building functions
-
-* `--source` Absolute or relative path to your project. Defaults to current working directory.
-
-* `--output` Where manifest and function files will be written to. Defaults to `dist`. If omitted with `--manifest` set the manifest will be printed to stdout.
+In a directory that contains a valid manifest file (`manifest.json` or `manifest.ts`), run the following:
 
 ```
-deno run --unstable --allow-write --allow-read https://deno.land/x/deno_slack_builder@0.0.5/mod.ts"
+deno run --unstable --allow-write --allow-read "https://deno.land/x/deno_slack_builder@0.0.5/mod.ts"
 ```
 
-1. Generates a `manifest.json` file in the `output` directory or prints to stdout.
+This will generate a valid Run On Slack project in a new folder named `dist`. 
 
-2. Bundles any functions w/ Deno into the `output` directory in a structure compatible with the Run on Slack runtime.
+## Usage details
 
-## Manifest Generation Logic
+The top level `mod.ts` file is executed as a Deno program, and takes up to three optional arguments:
+
+| Optional Argument | Description                                           |
+| ----------------- | ----------------------------------------------------- | 
+| `--manifest`      | If passed, will only generate the manifest and skip building functions. | 
+| `--source`        | Absolute or relative path to your project. Defaults to current working directory. |
+| `--output`        | Where manifest and function files will be written to. Defaults to `dist`. If omitted and `--manifest` is set, the manifest will be printed to stdout. |
+
+### Example Usage 
+
+**Only generate a valid Run On Slack manifest file:**
+```
+deno run --unstable --allow-write --allow-read "https://deno.land/x/deno_slack_builder@0.0.5/mod.ts" --manifest
+```
+
+**Generate a Run On Slack project from a /src directory:**
+```
+deno run --unstable --allow-write --allow-read "https://deno.land/x/deno_slack_builder@0.0.5/mod.ts" --source src
+```
+
+## How it works
+
+This Deno program bundles any functions with Deno into the output directory in a structure compatible with the Run on Slack runtime, and generates a Run On Slack `manifest.json` file.
+
+Both the manifest and the functions will be placed into a `dist` directory by default; use `--output` to specify a different target directory. You can also output to stdout by using `--manifest` (be sure to not use `--output` if you want to write to stdout). 
+
+### Manifest Generation Logic
+
 Allows for flexibility with how you define your manifest.
 
 * Looks for a `manifest.json` file. If it exists, use it.
@@ -59,3 +82,4 @@ Allows for flexibility with how you define your manifest.
   }
 }
 ```
+
