@@ -38,7 +38,7 @@ const run = async () => {
 
   // Clean output directory
   if (options.outputDirectory) {
-    await Deno.remove(options.outputDirectory, { recursive: true })
+    await Deno.remove(options.outputDirectory, { recursive: true });
     options.log(`remove directory: ${options.outputDirectory}`);
   }
 
