@@ -36,6 +36,12 @@ const run = async () => {
 
   options.log(options);
 
+  // Clean output directory
+  if (options.outputDirectory) {
+    await Deno.remove(options.outputDirectory, { recursive: true })
+    options.log(`remove directory: ${options.outputDirectory}`);
+  }
+
   // Generate Manifest
   const generatedManifest = await createManifest(options);
 

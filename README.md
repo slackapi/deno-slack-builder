@@ -6,25 +6,25 @@ Library for building a Run on Slack Deno project. The artifacts produced from th
 
 _**Note:** The examples below use version `0.0.5` of `deno-slack-builder`; check the [Releases](https://github.com/slackapi/deno-slack-builder/releases) page and be sure to use the latest version._
 
-In a directory that contains a valid manifest file (`manifest.json` or `manifest.ts`), run the following:
+In a directory that contains a valid manifest file (`manifest.json`, `manifest.js`, or `manifest.ts`), run the following:
 
 ```
 deno run --unstable --allow-write --allow-read "https://deno.land/x/deno_slack_builder@0.0.5/mod.ts"
 ```
 
-This will generate a valid Run On Slack project in a new folder named `dist`. 
+This will generate a valid Run On Slack project in a new folder named `dist`.
 
 ## Usage details
 
 The top level `mod.ts` file is executed as a Deno program, and takes up to three optional arguments:
 
 | Optional Argument | Description                                           |
-| ----------------- | ----------------------------------------------------- | 
-| `--manifest`      | If passed, will only generate the manifest and skip building functions. | 
+| ----------------- | ----------------------------------------------------- |
+| `--manifest`      | If passed, will only generate the manifest and skip building functions. |
 | `--source`        | Absolute or relative path to your project. Defaults to current working directory. |
 | `--output`        | Where manifest and function files will be written to. Defaults to `dist`. If omitted and `--manifest` is set, the manifest will be printed to stdout. |
 
-### Example Usage 
+### Example Usage
 
 **Only generate a valid Run On Slack manifest file:**
 ```
@@ -40,7 +40,7 @@ deno run --unstable --allow-write --allow-read "https://deno.land/x/deno_slack_b
 
 This Deno program bundles any functions with Deno into the output directory in a structure compatible with the Run on Slack runtime, and generates a Run On Slack `manifest.json` file.
 
-Both the manifest and the functions will be placed into a `dist` directory by default; use `--output` to specify a different target directory. You can also output to stdout by using `--manifest` (be sure to not use `--output` if you want to write to stdout). 
+Both the manifest and the functions will be placed into a `dist` directory by default; use `--output` to specify a different target directory. You can also output to stdout by using `--manifest` (be sure to not use `--output` if you want to write to stdout).
 
 ### Manifest Generation Logic
 
