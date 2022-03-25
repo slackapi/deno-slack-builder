@@ -38,8 +38,8 @@ const run = async () => {
 
   // Clean output directory
   if (options.outputDirectory) {
-    const removedOutputDirectory = await removeDirectory(options.outputDirectory)
-    if (removedOutputDirectory) {
+    const removedDirectory = await removeDirectory(options.outputDirectory);
+    if (removedDirectory) {
       options.log(`remove directory: ${options.outputDirectory}`);
     }
   }
@@ -79,12 +79,12 @@ async function removeDirectory(directoryPath: string): Promise<boolean> {
   try {
     await Deno.remove(directoryPath, { recursive: true });
     return true;
-  } catch(err) {
+  } catch (err) {
     if (err instanceof Deno.errors.NotFound) {
       return false;
     }
 
-    throw err
+    throw err;
   }
 }
 
