@@ -36,6 +36,14 @@ const run = async () => {
 
   options.log(options);
 
+  // Clean output directory
+  if (options.outputDirectory) {
+    const removedDirectory = await removeDirectory(options.outputDirectory);
+    if (removedDirectory) {
+      options.log(`remove directory: ${options.outputDirectory}`);
+    }
+  }
+
   // Generate Manifest
   const generatedManifest = await createManifest(options);
 
@@ -60,5 +68,24 @@ const run = async () => {
   const duration = Date.now() - start;
   options.log(`duration: ${duration}ms`);
 };
+
+/**
+ * Recursively deletes the specified directory.
+ *
+ * @param directoryPath the directory to delete
+ * @returns true when the directory is deleted or throws unexpected errors
+ */
+async function removeDirectory(directoryPath: string): Promise<boolean> {
+  try {
+    await Deno.remove(directoryPath, { recursive: true });
+    return true;
+  } catch (err) {
+    if (err instanceof Deno.errors.NotFound) {
+      return false;
+    }
+
+    throw err;
+  }
+}
 
 run();
