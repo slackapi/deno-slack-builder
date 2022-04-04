@@ -2,15 +2,18 @@ import { parse } from "https://deno.land/std@0.127.0/flags/mod.ts";
 import * as path from "https://deno.land/std@0.127.0/path/mod.ts";
 import { cleanManifest, createManifest } from "./manifest.ts";
 import { createFunctions } from "./functions.ts";
+import { projectScripts } from "./scripts.ts";
 import { Options } from "./types.ts";
 
 const run = async () => {
   const start = Date.now();
   // We could add additional arguments to indicate things like only generate the manifest, or only functions
-  let { source, output, manifest: manifestOnly = false } = parse(Deno.args);
+  let { source, output, manifest: manifestOnly = false, scripts } = parse(
+    Deno.args,
+  );
 
   // If we're generating functions, default output to a relative dist folder
-  if (!output && !manifestOnly) {
+  if (!output && !manifestOnly && !scripts) {
     output = "dist";
   }
 
@@ -29,8 +32,8 @@ const run = async () => {
     log: (...args: any) => console.log(...args),
   };
 
-  // Disable logging to stdout if we're outputing a manifest.json file to stdout
-  if (options.manifestOnly) {
+  // Disable logging to stdout if we're outputing a manifest.json file or project scripts to stdout
+  if (options.manifestOnly || scripts) {
     options.log = () => {};
   }
 
@@ -42,6 +45,12 @@ const run = async () => {
     if (removedDirectory) {
       options.log(`remove directory: ${options.outputDirectory}`);
     }
+  }
+
+  // If only outputting project scripts to stdout, do that and end early
+  if (scripts) {
+    console.log(JSON.stringify(projectScripts()));
+    return;
   }
 
   // Generate Manifest
