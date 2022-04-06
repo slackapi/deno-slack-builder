@@ -46,6 +46,7 @@ export const createFunctions = async (options: Options, manifest: any) => {
     const result = await Deno.emit(fnFilePath, {
       bundle: "module",
       check: false,
+      importMapPath: `${options.workingDirectory}/import_map.json`,
     });
 
     // Write FN File and sourcemap file
