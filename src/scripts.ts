@@ -18,7 +18,11 @@ export const projectScripts = () => {
     "run": {
       "script": {
         "default":
-          `deno run -q --unstable --import-map=import_map.json --allow-read --allow-write --allow-net https://deno.land/x/${RUNTIME_TIME}/mod.ts`,
+          `deno run -q --unstable --import-map=import_map.json --allow-read --allow-net https://deno.land/x/${RUNTIME_TAG}/mod.ts`,
+      },
+      "watcher": {
+        "filter_regex": "^manifest\\.(ts|js|json)$",
+        "paths": ["."],
       },
     },
   };
