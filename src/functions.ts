@@ -43,10 +43,20 @@ export const createFunctions = async (options: Options, manifest: any) => {
     }
 
     // Bundle File
+    let isImportMapPresent = false;
+    const importMapPath = `${options.workingDirectory}/import_map.json`;
+
+    try {
+      const { isFile } = await Deno.stat(importMapPath);
+      isImportMapPresent = isFile;
+    } catch (_e) {
+      isImportMapPresent = false;
+    }
+
     const result = await Deno.emit(fnFilePath, {
       bundle: "module",
       check: false,
-      importMapPath: `${options.workingDirectory}/import_map.json`,
+      importMapPath: isImportMapPresent ? importMapPath : undefined,
     });
 
     // Write FN File and sourcemap file
