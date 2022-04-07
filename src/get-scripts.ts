@@ -27,3 +27,7 @@ export const projectScripts = () => {
     },
   };
 };
+
+if (import.meta.main) {
+  console.log(JSON.stringify(projectScripts()));
+}
