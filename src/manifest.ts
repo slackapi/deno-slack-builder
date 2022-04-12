@@ -2,8 +2,6 @@ import * as path from "https://deno.land/std@0.127.0/path/mod.ts";
 import { deepMerge } from "https://deno.land/std/collections/mod.ts";
 import { Options } from "./types.ts";
 
-const DENO_RUNTIME_DEFAULT = "deno1.x";
-
 // Responsible for taking a working directory, and an output directory
 // and placing a manifest.json in the root of the output directory
 
@@ -36,11 +34,6 @@ export const createManifest = async (options: Options) => {
     throw new Error(
       "Could not find a manifest.json, manifest.ts or manifest.json file",
     );
-  }
-
-  if (!manifest.runtime) {
-    // Maybe we grab this version from an api instead of hard-coded in the library?
-    manifest.runtime = DENO_RUNTIME_DEFAULT;
   }
 
   return manifest;
