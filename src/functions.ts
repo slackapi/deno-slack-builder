@@ -1,6 +1,5 @@
-import * as path from "https://deno.land/std@0.127.0/path/mod.ts";
-import { ensureDir } from "https://deno.land/std@0.128.0/fs/mod.ts";
 import { Options } from "./types.ts";
+import { ensureDir, path } from "./deps.ts";
 
 // deno-lint-ignore no-explicit-any
 export const createFunctions = async (options: Options, manifest: any) => {

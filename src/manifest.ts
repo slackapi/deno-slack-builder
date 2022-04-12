@@ -1,6 +1,5 @@
-import * as path from "https://deno.land/std@0.127.0/path/mod.ts";
-import { deepMerge } from "https://deno.land/std/collections/mod.ts";
 import { Options } from "./types.ts";
+import { deepMerge, path } from "./deps.ts";
 
 const DENO_RUNTIME_DEFAULT = "deno1.x";
 
