@@ -97,11 +97,8 @@ export const generateFunctionTypes = (
         return wrapAsTypeKey(key, convertSnakeToPascal(id), isRequired);
       } else {
         // TODO: Figure out how to handle slack types
-        // For now we cry
-        console.log(
-          `Failed to create a type for the ${key} parameter`,
-        );
-        throw new Error("This is probably a Slack type");
+        // For now we treat them all as strings
+        return wrapAsTypeKey(key, "string", isRequired);
       }
     })
     .join("\n");

@@ -62,38 +62,21 @@ const createFunctionTypeFile = (key: string, func: ManifestFunctionSchema) => {
   const functionName = convertSnakeToPascal(key);
 
   const imports = [
-    `import type { Env, ISlackAPIClient } from "https://deno.land/x/deno_slack_sdk@0.0.1/types.ts";`,
+    `import type { FunctionHandler } from "deno-slack-sdk/types.ts"`,
     ...generateTypeImport(func.input_parameters.properties),
   ];
   const functionInputType = wrapAsType(
     `${functionName}FunctionInputs`,
     `{${generateFunctionTypes(func.input_parameters)}}`,
   );
-  const functionArgumentType = wrapAsType(
-    `${functionName}FunctionArguments`,
-    `{
-      env: Env;
-      inputs: ${functionName}FunctionInputs;
-      client?: ISlackAPIClient;
-      executionId?: string;
-    };`,
-    true,
-  );
-
   const functionOutputType = wrapAsType(
-    `${functionName}FunctionOutputTypes`,
-    `{
-      outputs: {
-        ${generateFunctionTypes(func.output_parameters)}
-      }
-    }
-    `,
-    true,
+    `${functionName}FunctionOutputs`,
+    `{${generateFunctionTypes(func.output_parameters)}}`,
   );
 
-  const functionSignatureType = wrapAsType(
-    `${functionName}FunctionType`,
-    `(context: ${functionName}FunctionArguments) => Promise<${functionName}FunctionOutputTypes>`,
+  const functionHandlerType = wrapAsType(
+    `${functionName}FunctionHandler`,
+    `FunctionHandler<${functionName}FunctionInputs, ${functionName}FunctionOutputs>`,
     true,
   );
 
@@ -102,12 +85,10 @@ const createFunctionTypeFile = (key: string, func: ManifestFunctionSchema) => {
   ${imports.join("\n")}
   
   ${functionInputType}
-  
-  ${functionArgumentType}
 
   ${functionOutputType}
-
-  ${functionSignatureType}
+  
+  ${functionHandlerType}
   `;
 };
 
