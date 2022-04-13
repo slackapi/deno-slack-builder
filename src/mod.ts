@@ -1,8 +1,7 @@
-import { parse } from "https://deno.land/std@0.127.0/flags/mod.ts";
-import * as path from "https://deno.land/std@0.127.0/path/mod.ts";
 import { cleanManifest, createManifest } from "./manifest.ts";
 import { createFunctions } from "./functions.ts";
 import { Options } from "./types.ts";
+import { parse, path } from "./deps.ts";
 
 const run = async () => {
   const start = Date.now();

@@ -1,6 +1,5 @@
-import * as path from "https://deno.land/std@0.127.0/path/mod.ts";
-import { deepMerge } from "https://deno.land/std/collections/mod.ts";
 import { Options } from "./types.ts";
+import { deepMerge, path } from "./deps.ts";
 
 // Responsible for taking a working directory, and an output directory
 // and placing a manifest.json in the root of the output directory
