@@ -1,5 +1,5 @@
 import { cleanManifest } from "../manifest.ts";
-import {assertEquals} from "../dev_deps.ts";
+import { assertEquals } from "../dev_deps.ts";
 
 Deno.test("cleanManifest", () => {
   // Create a partial of a manifest w/ just a function
