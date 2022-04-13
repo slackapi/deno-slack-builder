@@ -1,0 +1,5 @@
+{
+  "imports": {
+    "deno-slack-sdk/": "https://deno.land/x/deno_slack_sdk@0.0.1/"
+  }
+}

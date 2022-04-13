@@ -1,9 +1,5 @@
-import { parse } from "https://deno.land/std@0.127.0/flags/mod.ts";
-import * as path from "https://deno.land/std@0.127.0/path/mod.ts";
-import {
-  ManifestFunctionSchema,
-  ManifestSchema,
-} from "https://deno.land/x/deno_slack_sdk@0.0.1/types.ts";
+import { parse, path } from "../deps.ts";
+import type { ManifestFunctionSchema, ManifestSchema } from "../deps.ts";
 import { createManifest } from "../manifest.ts";
 import { convertSnakeToPascal } from "../utils.ts";
 import { CUSTOM_TYPE_FILENAME, DEFAULT_DIRECTORY } from "./constants.ts";

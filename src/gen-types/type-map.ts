@@ -1,4 +1,4 @@
-import SchemaTypes from "https://deno.land/x/deno_slack_sdk@0.0.1/schema/schema_types.ts";
+import { SchemaTypes } from "../deps.ts";
 
 interface TypeMap {
   [key: string]: string;

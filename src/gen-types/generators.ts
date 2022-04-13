@@ -1,10 +1,10 @@
-import { ParameterSetDefinition } from "https://deno.land/x/deno_slack_sdk@0.0.1/parameters/mod.ts";
-import {
+import type {
+  ManifestFunctionParameters,
+  ParameterSetDefinition,
   TypedArrayParameterDefinition,
   TypedParameterDefinition,
-} from "https://deno.land/x/deno_slack_sdk@0.0.1/parameters/types.ts";
-import SchemaTypes from "https://deno.land/x/deno_slack_sdk@0.0.1/schema/schema_types.ts";
-import { ManifestFunctionParameters } from "https://deno.land/x/deno_slack_sdk@0.0.1/types.ts";
+} from "../deps.ts";
+import { SchemaTypes } from "../deps.ts";
 import { abort, capitalizeStr, convertSnakeToPascal } from "../utils.ts";
 import { CUSTOM_TYPE_FILENAME } from "./constants.ts";
 import { TypeMap } from "./type-map.ts";
