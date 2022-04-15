@@ -38,6 +38,11 @@ export const createFunctions = async (options: Options, manifest: any) => {
         throw new Error(`Could not find file: ${fnFilePath}`);
       }
     } catch (e) {
+      if (e instanceof Deno.errors.NotFound) {
+        throw new Error(
+          `Could not find file: ${fnFilePath}. Make sure your function's "source_file" is relative to your project root.`,
+        );
+      }
       throw new Error(e);
     }
 
