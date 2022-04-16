@@ -66,7 +66,7 @@ Allows for flexibility with how you define your manifest.
           "description": "The string to reverse"
         }
       },
-      "required": ["stringToReverse"],
+      "required": ["stringToReverse"]
     },
     "output_parameters": {
       "properties": {
