@@ -75,7 +75,7 @@ Allows for flexibility with how you define your manifest.
           "description": "The string in reverse"
         }
       },
-      "required": ["reverseString"],
+      "required": ["reverseString"]
     }
   }
 }
