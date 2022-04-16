@@ -60,26 +60,22 @@ Allows for flexibility with how you define your manifest.
     "description": "Takes a string and reverses it",
     "source_file": "functions/reverse.ts",
     "input_parameters": {
-      "required": [
-        "stringToReverse"
-      ],
       "properties": {
         "stringToReverse": {
           "type": "string",
           "description": "The string to reverse"
         }
-      }
+      },
+      "required": ["stringToReverse"],
     },
     "output_parameters": {
-      "required": [
-        "reverseString"
-      ],
       "properties": {
         "reverseString": {
           "type": "string",
           "description": "The string in reverse"
         }
-      }
+      },
+      "required": ["reverseString"],
     }
   }
 }
