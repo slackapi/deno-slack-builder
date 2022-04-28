@@ -6,6 +6,12 @@ export const validateAndCreateFunctions = async (
   // deno-lint-ignore no-explicit-any
   manifest: any,
 ) => {
+  if (options.outputDirectory) {
+    // Ensure functions directory exists
+    const functionsPath = path.join(options.outputDirectory, "functions");
+    await ensureDir(functionsPath);
+  }
+
   // Find all the run on slack functions
   for (const fnId in manifest.functions) {
     const fnDef = manifest.functions[fnId];
@@ -67,10 +73,6 @@ const createFunctionFile = async (
   fnId: string,
   fnFilePath: string,
 ) => {
-  // Ensure functions directory exists
-  const functionsPath = path.join(options.outputDirectory, "functions");
-  await ensureDir(functionsPath);
-
   // Bundle File
   let isImportMapPresent = false;
   const importMapPath = `${options.workingDirectory}/import_map.json`;
