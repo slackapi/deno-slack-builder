@@ -46,9 +46,7 @@ const run = async () => {
   // Generate Manifest
   const generatedManifest = await createManifest(options);
 
-  if (!options.manifestOnly) {
-    await createFunctions(options, generatedManifest);
-  }
+  await createFunctions(options, generatedManifest);
 
   const prunedManifest = cleanManifest(generatedManifest);
 
