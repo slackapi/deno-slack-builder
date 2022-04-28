@@ -1,5 +1,5 @@
 import { cleanManifest, createManifest } from "./manifest.ts";
-import { createFunctions } from "./functions.ts";
+import { validateAndCreateFunctions } from "./functions.ts";
 import { Options } from "./types.ts";
 import { parse, path } from "./deps.ts";
 
@@ -46,7 +46,7 @@ const run = async () => {
   // Generate Manifest
   const generatedManifest = await createManifest(options);
 
-  await createFunctions(options, generatedManifest);
+  await validateAndCreateFunctions(options, generatedManifest);
 
   const prunedManifest = cleanManifest(generatedManifest);
 
