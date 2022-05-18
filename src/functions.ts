@@ -84,11 +84,19 @@ const createFunctionFile = async (
     isImportMapPresent = false;
   }
 
-  const result = await Deno.emit(fnFilePath, {
-    bundle: "module",
-    check: false,
-    importMapPath: isImportMapPresent ? importMapPath : undefined,
-  });
+  let result;
+  try {
+    result = await Deno.emit(fnFilePath, {
+      bundle: "module",
+      check: false,
+      importMapPath: isImportMapPresent ? importMapPath : undefined,
+    });
+  } catch (e) {
+    console.log(
+      "This is likely due to the newest versions of Deno no longer supporting Deno.emit(). Please downgrade your version of Deno to 1.21.3",
+    );
+    throw new Error(e);
+  }
 
   // Write FN File and sourcemap file
   const fnFileRelative = path.join("functions", `${fnId}.js`);
