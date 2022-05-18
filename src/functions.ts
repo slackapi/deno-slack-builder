@@ -76,20 +76,25 @@ const createFunctionFile = async (
   const fnFileRelative = path.join("functions", `${fnId}.js`);
   const fnBundledPath = path.join(options.outputDirectory, fnFileRelative);
 
-  // call out to deno to handle bundling
-  const p = Deno.run({
-    cmd: [
-      "deno",
-      "bundle",
-      fnFilePath,
-      fnBundledPath,
-    ],
-  });
+  try {
+    // call out to deno to handle bundling
+    const p = Deno.run({
+      cmd: [
+        "deno",
+        "bundle",
+        fnFilePath,
+        fnBundledPath,
+      ],
+    });
 
-  const status = await p.status();
-  if (status.code !== 0 || !status.success) {
-    throw new Error(`Error writing bundled function file: ${fnId}`);
+    const status = await p.status();
+    if (status.code !== 0 || !status.success) {
+      throw new Error(`Error bundling function file: ${fnId}`);
+    }
+
+    options.log(`wrote function file: ${fnFileRelative}`);
+  } catch (e) {
+    console.log(`Error bundling function file: ${fnId}`);
+    throw e;
   }
-
-  options.log(`wrote function file: ${fnFileRelative}`);
 };
