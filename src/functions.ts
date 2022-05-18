@@ -73,52 +73,23 @@ const createFunctionFile = async (
   fnId: string,
   fnFilePath: string,
 ) => {
-  // Bundle File
-  let isImportMapPresent = false;
-  const importMapPath = `${options.workingDirectory}/import_map.json`;
-
-  try {
-    const { isFile } = await Deno.stat(importMapPath);
-    isImportMapPresent = isFile;
-  } catch (_e) {
-    isImportMapPresent = false;
-  }
-
-  let result;
-  try {
-    result = await Deno.emit(fnFilePath, {
-      bundle: "module",
-      check: false,
-      importMapPath: isImportMapPresent ? importMapPath : undefined,
-    });
-  } catch (e) {
-    console.log(
-      "This is likely due to the newest versions of Deno no longer supporting Deno.emit(). Please downgrade your version of Deno to 1.21.3",
-    );
-    throw new Error(e);
-  }
-
-  // Write FN File and sourcemap file
   const fnFileRelative = path.join("functions", `${fnId}.js`);
   const fnBundledPath = path.join(options.outputDirectory, fnFileRelative);
-  const fnSourcemapPath = path.join(
-    options.outputDirectory,
-    "functions",
-    `${fnId}.js.map`,
-  );
+
+  // call out to deno to handle bundling
+  const p = Deno.run({
+    cmd: [
+      "deno",
+      "bundle",
+      fnFilePath,
+      fnBundledPath,
+    ],
+  });
+
+  const status = await p.status();
+  if (status.code !== 0 || !status.success) {
+    throw new Error(`Error writing bundled function file: ${fnId}`);
+  }
 
   options.log(`wrote function file: ${fnFileRelative}`);
-  try {
-    await Deno.writeTextFile(
-      fnBundledPath,
-      result.files["deno:///bundle.js"],
-    );
-    await Deno.writeTextFile(
-      fnSourcemapPath,
-      result.files["deno:///bundle.js.map"],
-    );
-  } catch (e) {
-    options.log(e);
-    throw new Error(`Error writing bundled function file: ${fnId}`, e);
-  }
 };
