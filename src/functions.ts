@@ -76,11 +76,18 @@ const createFunctionFile = async (
   const fnFileRelative = path.join("functions", `${fnId}.js`);
   const fnBundledPath = path.join(options.outputDirectory, fnFileRelative);
 
+  let denoExecutablePath = "deno";
+  try {
+    denoExecutablePath = Deno.execPath();
+  } catch (e) {
+    console.log("Error calling Deno.execPath()", e);
+  }
+
   try {
     // call out to deno to handle bundling
     const p = Deno.run({
       cmd: [
-        "deno",
+        denoExecutablePath,
         "bundle",
         fnFilePath,
         fnBundledPath,
