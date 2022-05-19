@@ -76,6 +76,9 @@ const createFunctionFile = async (
   const fnFileRelative = path.join("functions", `${fnId}.js`);
   const fnBundledPath = path.join(options.outputDirectory, fnFileRelative);
 
+  // We'll default to just using whatever Deno executable is on the path
+  // Ideally we should be able to rely on Deno.execPath() so we make sure to bundle with the same version of Deno
+  // that called this script. This is perhaps a bit overly cautious, so we can look to remove the defaulting here in the future.
   let denoExecutablePath = "deno";
   try {
     denoExecutablePath = Deno.execPath();
