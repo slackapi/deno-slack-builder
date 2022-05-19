@@ -73,52 +73,38 @@ const createFunctionFile = async (
   fnId: string,
   fnFilePath: string,
 ) => {
-  // Bundle File
-  let isImportMapPresent = false;
-  const importMapPath = `${options.workingDirectory}/import_map.json`;
-
-  try {
-    const { isFile } = await Deno.stat(importMapPath);
-    isImportMapPresent = isFile;
-  } catch (_e) {
-    isImportMapPresent = false;
-  }
-
-  let result;
-  try {
-    result = await Deno.emit(fnFilePath, {
-      bundle: "module",
-      check: false,
-      importMapPath: isImportMapPresent ? importMapPath : undefined,
-    });
-  } catch (e) {
-    console.log(
-      "This is likely due to the newest versions of Deno no longer supporting Deno.emit(). Please downgrade your version of Deno to 1.21.3",
-    );
-    throw new Error(e);
-  }
-
-  // Write FN File and sourcemap file
   const fnFileRelative = path.join("functions", `${fnId}.js`);
   const fnBundledPath = path.join(options.outputDirectory, fnFileRelative);
-  const fnSourcemapPath = path.join(
-    options.outputDirectory,
-    "functions",
-    `${fnId}.js.map`,
-  );
 
-  options.log(`wrote function file: ${fnFileRelative}`);
+  // We'll default to just using whatever Deno executable is on the path
+  // Ideally we should be able to rely on Deno.execPath() so we make sure to bundle with the same version of Deno
+  // that called this script. This is perhaps a bit overly cautious, so we can look to remove the defaulting here in the future.
+  let denoExecutablePath = "deno";
   try {
-    await Deno.writeTextFile(
-      fnBundledPath,
-      result.files["deno:///bundle.js"],
-    );
-    await Deno.writeTextFile(
-      fnSourcemapPath,
-      result.files["deno:///bundle.js.map"],
-    );
+    denoExecutablePath = Deno.execPath();
   } catch (e) {
-    options.log(e);
-    throw new Error(`Error writing bundled function file: ${fnId}`, e);
+    options.log("Error calling Deno.execPath()", e);
+  }
+
+  try {
+    // call out to deno to handle bundling
+    const p = Deno.run({
+      cmd: [
+        denoExecutablePath,
+        "bundle",
+        fnFilePath,
+        fnBundledPath,
+      ],
+    });
+
+    const status = await p.status();
+    if (status.code !== 0 || !status.success) {
+      throw new Error(`Error bundling function file: ${fnId}`);
+    }
+
+    options.log(`wrote function file: ${fnFileRelative}`);
+  } catch (e) {
+    options.log(`Error bundling function file: ${fnId}`);
+    throw e;
   }
 };
