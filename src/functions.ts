@@ -80,7 +80,7 @@ const createFunctionFile = async (
   try {
     denoExecutablePath = Deno.execPath();
   } catch (e) {
-    console.log("Error calling Deno.execPath()", e);
+    options.log("Error calling Deno.execPath()", e);
   }
 
   try {
@@ -101,7 +101,7 @@ const createFunctionFile = async (
 
     options.log(`wrote function file: ${fnFileRelative}`);
   } catch (e) {
-    console.log(`Error bundling function file: ${fnId}`);
+    options.log(`Error bundling function file: ${fnId}`);
     throw e;
   }
 };
