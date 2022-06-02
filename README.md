@@ -2,6 +2,10 @@
 
 Library for building a Run on Slack Deno project. The artifacts produced from this library are what can be deployed as a Run on Slack project.
 
+## Requirements
+
+A recent version of `deno`.
+
 ## Quickstart
 
 _**Note:** The examples below use version `0.0.9` of `deno-slack-builder`; check the [Releases](https://github.com/slackapi/deno-slack-builder/releases) page and be sure to use the latest version._
@@ -81,3 +85,20 @@ Allows for flexibility with how you define your manifest.
 }
 ```
 
+## Running Tests
+
+If you make changes to this repo, or just want to make sure things are working as desired, you can run:
+
+    deno task test
+
+To get a full test coverage report, run:
+
+    deno task coverage
+
+---
+
+### Getting Help
+
+We welcome contributions from everyone! Please check out our
+[Contributor's Guide](.github/CONTRIBUTING.md) for how to contribute in a
+helpful and collaborative way.
