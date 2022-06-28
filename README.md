@@ -13,7 +13,7 @@ _**Note:** The examples below use version `0.0.9` of `deno-slack-builder`; check
 In a directory that contains a valid manifest file (`manifest.json`, `manifest.js`, or `manifest.ts`), run the following:
 
 ```
-deno run --unstable --allow-write --allow-read "https://deno.land/x/deno_slack_builder@0.0.9/mod.ts"
+deno run --allow-write --allow-read "https://deno.land/x/deno_slack_builder@0.0.9/mod.ts"
 ```
 
 This will generate a valid Run On Slack project in a new folder named `dist`.
@@ -32,12 +32,12 @@ The top level `mod.ts` file is executed as a Deno program, and takes up to three
 
 **Only generate a valid Run On Slack manifest file:**
 ```
-deno run --unstable --allow-write --allow-read "https://deno.land/x/deno_slack_builder@0.0.9/mod.ts" --manifest
+deno run --allow-write --allow-read "https://deno.land/x/deno_slack_builder@0.0.9/mod.ts" --manifest
 ```
 
 **Generate a Run On Slack project from a /src directory:**
 ```
-deno run --unstable --allow-write --allow-read "https://deno.land/x/deno_slack_builder@0.0.9/mod.ts" --source src
+deno run --allow-write --allow-read "https://deno.land/x/deno_slack_builder@0.0.9/mod.ts" --source src
 ```
 
 ## How it works
