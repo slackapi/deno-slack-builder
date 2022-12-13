@@ -32,6 +32,7 @@ const run = async () => {
   if (options.manifestOnly) {
     options.log = () => {};
   }
+  console.log('beep boop');
 
   options.log(options);
 
@@ -53,7 +54,7 @@ const run = async () => {
   // If no output was provided, print to stdout
   if (!options.outputDirectory) {
     // We explicitly are writing this to stdout here, not using log()
-    console.log(JSON.stringify(prunedManifest, null, 2));
+    console.log(JSON.stringify(prunedManifest));
   } else {
     await Deno.writeTextFile(
       path.join(options.outputDirectory, "manifest.json"),
