@@ -21,9 +21,11 @@ export const validateAndCreateFunctions = async (
     // if (fnDef.runtime_environment !== 'slack') {
     //   continue;
     // }
-
-    // Always validate function paths
-    const fnFilePath = await getValidFunctionPath(options, fnId, fnDef);
+    let fnFilePath = "";
+    if (fnDef.type != "API") {
+      // Always validate function paths
+      fnFilePath = await getValidFunctionPath(options, fnId, fnDef);
+    }
 
     // Create function files if there is an output directory provided
     if (options.outputDirectory) {
