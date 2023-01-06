@@ -28,7 +28,7 @@ export const validateAndCreateFunctions = async (
     }
 
     // Create function files if there is an output directory provided
-    if (options.outputDirectory) {
+    if (options.outputDirectory && fnDef.type != "API") {
       createFunctionFile(options as Required<Options>, fnId, fnFilePath);
     } else if (!options.outputDirectory && !options.manifestOnly) {
       // If no output directory and not just outputting manifest, throw error
