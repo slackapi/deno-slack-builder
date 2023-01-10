@@ -22,13 +22,13 @@ export const validateAndCreateFunctions = async (
     //   continue;
     // }
     let fnFilePath = "";
-    // Validate function paths except for API functions as API functions does not 
+    // Validate function paths except for API functions as API functions does not
     // have source file.
     if (fnDef.type != "API") {
       fnFilePath = await getValidFunctionPath(options, fnId, fnDef);
     }
 
-    // Create function files if there is an output directory provided 
+    // Create function files if there is an output directory provided
     //and it is not API function.
     if (options.outputDirectory && fnDef.type != "API") {
       createFunctionFile(options as Required<Options>, fnId, fnFilePath);
