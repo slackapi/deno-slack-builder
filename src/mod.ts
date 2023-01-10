@@ -49,7 +49,6 @@ const run = async () => {
   await validateAndCreateFunctions(options, generatedManifest);
 
   const prunedManifest = cleanManifest(generatedManifest);
-  //console.log(JSON.stringify(prunedManifest, null, 2));
 
   // If no output was provided, print to stdout
   if (!options.outputDirectory) {
