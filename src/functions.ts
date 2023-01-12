@@ -21,16 +21,17 @@ export const validateAndCreateFunctions = async (
     // if (fnDef.runtime_environment !== 'slack') {
     //   continue;
     // }
-    let fnFilePath = "";
-    // Validate function paths except for API functions as API functions does not
-    // have source file.
-    if (fnDef.type !== "API") {
-      fnFilePath = await getValidFunctionPath(options, fnId, fnDef);
+
+    //For API type functions, there are no function files.
+    if(fnDef.type==="API"){
+      continue;
     }
+    
+    // Always validate function paths
+    const fnFilePath = await getValidFunctionPath(options, fnId, fnDef);
 
     // Create function files if there is an output directory provided
-    //and it is not API function.
-    if (options.outputDirectory && fnDef.type !== "API") {
+    if (options.outputDirectory) {
       createFunctionFile(options as Required<Options>, fnId, fnFilePath);
     } else if (!options.outputDirectory && !options.manifestOnly) {
       // If no output directory and not just outputting manifest, throw error
