@@ -23,7 +23,7 @@ export const validateAndCreateFunctions = async (
     // }
 
     //For API type functions, there are no function files.
-    if(fnDef.type==="API"){
+    if(fnDef.type === "API") {
       continue;
     }
     
