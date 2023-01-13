@@ -22,6 +22,11 @@ export const validateAndCreateFunctions = async (
     //   continue;
     // }
 
+    //For API type functions, there are no function files.
+    if (fnDef.type === "API") {
+      continue;
+    }
+
     // Always validate function paths
     const fnFilePath = await getValidFunctionPath(options, fnId, fnDef);
 
