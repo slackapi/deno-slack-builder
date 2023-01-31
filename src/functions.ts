@@ -82,7 +82,7 @@ const getValidFunctionPath = async (
     throw new Error(e);
   }
 
-  if (!functionPathHasDefaultExport(fnFilePath)) {
+  if (!await functionPathHasDefaultExport(fnFilePath)) {
     throw new Error(
       `File: ${fnFilePath}, containing your function does not define a default export handler.`,
     );
