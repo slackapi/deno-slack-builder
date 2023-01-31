@@ -42,6 +42,17 @@ export const validateAndCreateFunctions = async (
   }
 };
 
+const functionPathHasDefaultExport = async (
+  functionFilePath: string,
+) => {
+  const functionModule = await import(functionFilePath as string);
+
+  if (functionModule.default) {
+    return true;
+  }
+  return false;
+};
+
 const getValidFunctionPath = async (
   options: Options,
   fnId: string,
@@ -69,6 +80,12 @@ const getValidFunctionPath = async (
       );
     }
     throw new Error(e);
+  }
+
+  if (!functionPathHasDefaultExport(fnFilePath)) {
+    throw new Error(
+      `File: ${fnFilePath}, containing your function does not define a default export handler.`,
+    );
   }
   return fnFilePath;
 };
