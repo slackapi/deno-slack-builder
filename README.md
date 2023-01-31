@@ -12,7 +12,7 @@ _**Note:** The examples below use version `0.1.0` of `deno-slack-builder`; check
 
 In a directory that contains a valid manifest file (`manifest.json`, `manifest.js`, or `manifest.ts`), run the following:
 
-```
+```bash
 deno run --allow-write --allow-read "https://deno.land/x/deno_slack_builder@0.1.0/mod.ts"
 ```
 
@@ -31,12 +31,14 @@ The top level `mod.ts` file is executed as a Deno program, and takes up to three
 ### Example Usage
 
 **Only generate a valid Run On Slack manifest file:**
-```
+
+```bash
 deno run --allow-write --allow-read "https://deno.land/x/deno_slack_builder@0.1.0/mod.ts" --manifest
 ```
 
 **Generate a Run On Slack project from a /src directory:**
-```
+
+```bash
 deno run --allow-write --allow-read "https://deno.land/x/deno_slack_builder@0.1.0/mod.ts" --source src
 ```
 
@@ -55,6 +57,7 @@ Allows for flexibility with how you define your manifest.
 * If no `manifest.ts` exists, looks for a `manifest.js` file, and follows the same logic as `manifest.ts` does.
 
 ## Function Bundling
+
 * For each entry in the `functions` where `remote_environment=slack` it looks for a `source_file` property, which should be a relative path to the corresponding function file. This is then bundled for the Run on Slack Deno runtime. The `reverse` function defined below indicates there should be a corresponding function file in the project located at `functions/reverse.ts`.
 
 ```json
@@ -89,11 +92,15 @@ Allows for flexibility with how you define your manifest.
 
 If you make changes to this repo, or just want to make sure things are working as desired, you can run:
 
-    deno task test
+```bash
+deno task test
+```
 
 To get a full test coverage report, run:
 
-    deno task coverage
+```bash
+deno task coverage
+```
 
 ---
 

@@ -46,11 +46,7 @@ const functionPathHasDefaultExport = async (
   functionFilePath: string,
 ) => {
   const functionModule = await import(functionFilePath as string);
-
-  if (functionModule.default) {
-    return true;
-  }
-  return false;
+  return functionModule.default ? true : false;
 };
 
 const getValidFunctionPath = async (
