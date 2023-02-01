@@ -67,8 +67,8 @@ Deno.test("Function files with no default export should get an error", async () 
     },
   };
   await assertRejects(
-    () => validateAndCreateFunctions(options, manifest), // callback that returns a promise
-    Error, // Error Class
-    "default export handler", // substring of error message
+    () => validateAndCreateFunctions(options, manifest),
+    Error,
+    "default export handler",
   );
 });
