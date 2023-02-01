@@ -45,7 +45,7 @@ export const validateAndCreateFunctions = async (
 const functionPathHasDefaultExport = async (
   functionFilePath: string,
 ) => {
-  const functionModule = await import(functionFilePath as string);
+  const functionModule = await import(functionFilePath);
   return functionModule.default ? true : false;
 };
 
