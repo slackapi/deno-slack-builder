@@ -1,5 +1,5 @@
 import { validateAndCreateFunctions } from "../functions.ts";
-import { assertEquals, assertExists, assertIsError } from "../dev_deps.ts";
+import { assertEquals, assertExists, assertRejects } from "../dev_deps.ts";
 import { Options } from "../types.ts";
 
 Deno.test("validateAndCreateFunctions", () => {
@@ -66,11 +66,9 @@ Deno.test("Function files with no default export should get an error", async () 
       },
     },
   };
-  try {
-    await validateAndCreateFunctions(options, manifest);
-  } catch (error) {
-    assertIsError(error);
-    return;
-  }
-  assertEquals(false, true);
+  await assertRejects(
+    () => validateAndCreateFunctions(options, manifest), // callback that returns a promise
+    Error, // Error Class
+    "default export handler", // substring of error message
+  );
 });
