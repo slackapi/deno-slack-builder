@@ -46,7 +46,9 @@ const functionPathHasDefaultExport = async (
   functionFilePath: string,
 ) => {
   const functionModule = await import(`file://${functionFilePath}`);
-  return functionModule.default ? true : false;
+  return functionModule.default
+    ? typeof functionModule.default == "function"
+    : false;
 };
 
 const getValidFunctionPath = async (
