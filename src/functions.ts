@@ -1,8 +1,9 @@
-import { Options } from "./types.ts";
+import { Options, Protocol } from "./types.ts";
 import { ensureDir, path } from "./deps.ts";
 
 export const validateAndCreateFunctions = async (
   options: Options,
+  walkieTalkie: Protocol,
   // deno-lint-ignore no-explicit-any
   manifest: any,
 ) => {
@@ -32,7 +33,12 @@ export const validateAndCreateFunctions = async (
 
     // Create function files if there is an output directory provided
     if (options.outputDirectory) {
-      createFunctionFile(options as Required<Options>, fnId, fnFilePath);
+      createFunctionFile(
+        options as Required<Options>,
+        walkieTalkie,
+        fnId,
+        fnFilePath,
+      );
     } else if (!options.outputDirectory && !options.manifestOnly) {
       // If no output directory and not just outputting manifest, throw error
       throw new Error(
@@ -90,6 +96,7 @@ const getValidFunctionPath = async (
 
 const createFunctionFile = async (
   options: Required<Options>,
+  walkieTalkie: Protocol,
   fnId: string,
   fnFilePath: string,
 ) => {
@@ -103,7 +110,7 @@ const createFunctionFile = async (
   try {
     denoExecutablePath = Deno.execPath();
   } catch (e) {
-    options.log("Error calling Deno.execPath()", e);
+    walkieTalkie.error("Error calling Deno.execPath()", e);
   }
 
   try {
@@ -122,9 +129,9 @@ const createFunctionFile = async (
       throw new Error(`Error bundling function file: ${fnId}`);
     }
 
-    options.log(`wrote function file: ${fnFileRelative}`);
+    walkieTalkie.log(`wrote function file: ${fnFileRelative}`);
   } catch (e) {
-    options.log(`Error bundling function file: ${fnId}`);
+    walkieTalkie.log(`Error bundling function file: ${fnId}`);
     throw e;
   }
 };

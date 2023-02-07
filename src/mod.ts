@@ -1,9 +1,10 @@
 import { cleanManifest, createManifest } from "./manifest.ts";
 import { validateAndCreateFunctions } from "./functions.ts";
-import { Options } from "./types.ts";
+import type { Options, Protocol } from "./types.ts";
 import { parse, path } from "./deps.ts";
+import { getProtocolInterface } from "./protocol.ts";
 
-const run = async () => {
+const run = async (walkieTalkie: Protocol) => {
   const start = Date.now();
   // We could add additional arguments to indicate things like only generate the manifest, or only functions
   let { source, output, manifest: manifestOnly = false } = parse(Deno.args);
@@ -24,46 +25,39 @@ const run = async () => {
     manifestOnly,
     workingDirectory,
     outputDirectory,
-    // deno-lint-ignore no-explicit-any
-    log: (...args: any) => console.log(...args),
   };
 
-  // Disable logging to stdout if we're outputing a manifest.json file to stdout
-  if (options.manifestOnly) {
-    options.log = () => {};
-  }
-
-  options.log(options);
+  walkieTalkie.log(options);
 
   // Clean output directory
   if (options.outputDirectory) {
     const removedDirectory = await removeDirectory(options.outputDirectory);
     if (removedDirectory) {
-      options.log(`remove directory: ${options.outputDirectory}`);
+      walkieTalkie.log(`remove directory: ${options.outputDirectory}`);
     }
   }
 
   // Generate Manifest
   const generatedManifest = await createManifest(options);
 
-  await validateAndCreateFunctions(options, generatedManifest);
+  await validateAndCreateFunctions(options, walkieTalkie, generatedManifest);
 
   const prunedManifest = cleanManifest(generatedManifest);
 
-  // If no output was provided, print to stdout
+  // If no output directory was provided, we assume the CLI is asking for the app's manifest
   if (!options.outputDirectory) {
     // We explicitly are writing this to stdout here, not using log()
-    console.log(JSON.stringify(prunedManifest, null, 2));
+    walkieTalkie.respond(JSON.stringify(prunedManifest, null, 2));
   } else {
     await Deno.writeTextFile(
       path.join(options.outputDirectory, "manifest.json"),
       JSON.stringify(prunedManifest, null, 2),
     );
-    options.log(`wrote manifest.json`);
+    walkieTalkie.log(`wrote manifest.json`);
   }
 
   const duration = Date.now() - start;
-  options.log(`duration: ${duration}ms`);
+  walkieTalkie.log(`duration: ${duration}ms`);
 };
 
 /**
@@ -85,4 +79,7 @@ async function removeDirectory(directoryPath: string): Promise<boolean> {
   }
 }
 
-run();
+if (import.meta.main) {
+  const walkieTalkie = getProtocolInterface(Deno.args);
+  run(walkieTalkie);
+}
