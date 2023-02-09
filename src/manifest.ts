@@ -101,16 +101,25 @@ async function readImportedManifestFile(options: Options, filename: string) {
   // other than stdout for diagnostic information, we stub over console.log
   // with the negotiated protocol's logging implementation, just in case.
   const originalLog = globalThis.console.log;
+  const originalWarn = globalThis.console.warn;
+  const originalError = globalThis.console.error;
   globalThis.console.log = options.protocol.log;
+  globalThis.console.warn = options.protocol.warn;
+  globalThis.console.error = options.protocol.error;
   try {
     manifestJSFile = await import(`file://${manifestJSFilePath}`);
   } catch (err) {
     // Restore original logging behaviour in case of exception.
     globalThis.console.log = originalLog;
+    globalThis.console.warn = originalWarn;
+    globalThis.console.error = originalError;
     throw err;
   }
   // Restore original logging behaviour when everything is good too.
   globalThis.console.log = originalLog;
+  globalThis.console.log = originalLog;
+  globalThis.console.warn = originalWarn;
+  globalThis.console.error = originalError;
   if (manifestJSFile && manifestJSFile.default) {
     manifestJS = manifestJSFile.default;
   }
