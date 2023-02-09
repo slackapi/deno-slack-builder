@@ -2,18 +2,31 @@ import { validateAndCreateFunctions } from "../functions.ts";
 import { assertEquals, assertExists, assertRejects } from "../dev_deps.ts";
 import { Options } from "../types.ts";
 
+function mockProtocol() {
+  const captured_log: string[] = [];
+  // deno-lint-ignore no-explicit-any
+  const log = (x: any) => {
+    captured_log.push(x);
+  };
+  const protocol = {
+    log,
+    error: log,
+    warn: log,
+    respond: () => {},
+  };
+  return { captured_log, protocol };
+}
+
 Deno.test("validateAndCreateFunctions", () => {
   assertExists(validateAndCreateFunctions);
 });
 
 Deno.test("validateAndCreateFunctions should not throw an exception when fed a function file that has a default export", async () => {
-  const captured_log: string[] = [];
+  const { captured_log, protocol } = mockProtocol();
   const options: Options = {
     manifestOnly: true,
     workingDirectory: Deno.cwd(),
-    log: (x) => {
-      captured_log.push(x);
-    },
+    protocol,
   };
   const manifest = {
     "functions": {
@@ -41,13 +54,11 @@ Deno.test("validateAndCreateFunctions should not throw an exception when fed a f
 });
 
 Deno.test("Function files with no default export should get an error", async () => {
-  const captured_log: string[] = [];
+  const { protocol } = mockProtocol();
   const options: Options = {
     manifestOnly: true,
     workingDirectory: Deno.cwd(),
-    log: (x) => {
-      captured_log.push(x);
-    },
+    protocol,
   };
   const manifest = {
     "functions": {
@@ -74,13 +85,11 @@ Deno.test("Function files with no default export should get an error", async () 
 });
 
 Deno.test("Function files not exporting a function should get an error", async () => {
-  const captured_log: string[] = [];
+  const { protocol } = mockProtocol();
   const options: Options = {
     manifestOnly: true,
     workingDirectory: Deno.cwd(),
-    log: (x) => {
-      captured_log.push(x);
-    },
+    protocol,
   };
   const manifest = {
     "functions": {

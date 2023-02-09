@@ -85,7 +85,6 @@ async function readImportedManifestFile(options: Options, filename: string) {
   // deno-lint-ignore no-explicit-any
   let manifestJS: any = {};
   const manifestJSFilePath = path.join(options.workingDirectory, filename);
-  // - use as baseline
 
   try {
     const { isFile } = await Deno.stat(manifestJSFilePath);
@@ -98,14 +97,19 @@ async function readImportedManifestFile(options: Options, filename: string) {
   }
 
   let manifestJSFile;
+  // To enable userland logging, in case the protocol in use uses something
+  // other than stdout for diagnostic information, we stub over console.log
+  // with the negotiated protocol's logging implementation, just in case.
   const originalLog = globalThis.console.log;
   globalThis.console.log = options.protocol.log;
   try {
     manifestJSFile = await import(`file://${manifestJSFilePath}`);
   } catch (err) {
+    // Restore original logging behaviour in case of exception.
     globalThis.console.log = originalLog;
     throw err;
   }
+  // Restore original logging behaviour when everything is good too.
   globalThis.console.log = originalLog;
   if (manifestJSFile && manifestJSFile.default) {
     manifestJS = manifestJSFile.default;

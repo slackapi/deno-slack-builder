@@ -35,9 +35,7 @@ export const MessageBoundaryProtocol = function (args: string[]): Protocol {
     warn: console.log,
     // deno-lint-ignore no-explicit-any
     respond: (data: any) => {
-      console.log(boundary);
-      console.log(data);
-      console.log(boundary);
+      console.log(boundary + "\n" + JSON.stringify(data) + boundary);
     },
   };
 };
@@ -54,6 +52,9 @@ export const getProtocolInterface = function (args: string[]): Protocol {
   if (protocolFromCLI) {
     if (SUPPORTED_NAMED_PROTOCOLS.includes(protocolFromCLI)) {
       const iface = PROTOCOL_MAP[protocolFromCLI];
+      // Allow support for protocol implementations to either be:
+      // - a function, that takes arguments passed to this process, to dynamically instantiate a Protocol interface
+      // - an object implementing the Protocol interface directly
       if (typeof iface === "function") {
         return iface(args);
       } else {
@@ -64,6 +65,6 @@ export const getProtocolInterface = function (args: string[]): Protocol {
   // If protocol negotiation fails for any reason, return the base protocol
   // In the base protocol, if only a manifest is being requested, then we must
   // return the manifest JSON over stdout, so the logging interface passed into
-  // BaseProtocol is a no-op function (to prevent logging to stdout
+  // BaseProtocol is a no-op function (to prevent logging to stdout)
   return BaseProtocol(manifestOnly ? () => {} : console.log);
 };

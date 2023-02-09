@@ -41,7 +41,7 @@ const run = async (walkieTalkie: Protocol) => {
   // Generate Manifest
   const generatedManifest = await createManifest(options);
 
-  await validateAndCreateFunctions(options, walkieTalkie, generatedManifest);
+  await validateAndCreateFunctions(options, generatedManifest);
 
   const prunedManifest = cleanManifest(generatedManifest);
 

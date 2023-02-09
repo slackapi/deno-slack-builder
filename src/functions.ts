@@ -1,9 +1,8 @@
-import { Options, Protocol } from "./types.ts";
+import { Options } from "./types.ts";
 import { ensureDir, path } from "./deps.ts";
 
 export const validateAndCreateFunctions = async (
   options: Options,
-  walkieTalkie: Protocol,
   // deno-lint-ignore no-explicit-any
   manifest: any,
 ) => {
@@ -35,7 +34,6 @@ export const validateAndCreateFunctions = async (
     if (options.outputDirectory) {
       createFunctionFile(
         options as Required<Options>,
-        walkieTalkie,
         fnId,
         fnFilePath,
       );
@@ -96,7 +94,6 @@ const getValidFunctionPath = async (
 
 const createFunctionFile = async (
   options: Required<Options>,
-  walkieTalkie: Protocol,
   fnId: string,
   fnFilePath: string,
 ) => {
@@ -110,7 +107,7 @@ const createFunctionFile = async (
   try {
     denoExecutablePath = Deno.execPath();
   } catch (e) {
-    walkieTalkie.error("Error calling Deno.execPath()", e);
+    options.protocol.error("Error calling Deno.execPath()", e);
   }
 
   try {
@@ -129,9 +126,9 @@ const createFunctionFile = async (
       throw new Error(`Error bundling function file: ${fnId}`);
     }
 
-    walkieTalkie.log(`wrote function file: ${fnFileRelative}`);
+    options.protocol.log(`wrote function file: ${fnFileRelative}`);
   } catch (e) {
-    walkieTalkie.log(`Error bundling function file: ${fnId}`);
+    options.protocol.error(`Error bundling function file: ${fnId}`);
     throw e;
   }
 };
