@@ -2,6 +2,7 @@ export type Options = {
   manifestOnly: boolean;
   workingDirectory: string;
   outputDirectory?: string;
+  protocol: Protocol;
 };
 
 export interface Protocol {

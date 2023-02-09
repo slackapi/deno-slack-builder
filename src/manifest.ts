@@ -97,13 +97,18 @@ async function readImportedManifestFile(options: Options, filename: string) {
     return false;
   }
 
+  let manifestJSFile;
+  const originalLog = globalThis.console.log;
+  globalThis.console.log = options.protocol.log;
   try {
-    const manifestJSFile = await import(`file://${manifestJSFilePath}`);
-    if (manifestJSFile && manifestJSFile.default) {
-      manifestJS = manifestJSFile.default;
-    }
+    manifestJSFile = await import(`file://${manifestJSFilePath}`);
   } catch (err) {
+    globalThis.console.log = originalLog;
     throw err;
+  }
+  globalThis.console.log = originalLog;
+  if (manifestJSFile && manifestJSFile.default) {
+    manifestJS = manifestJSFile.default;
   }
 
   return manifestJS;

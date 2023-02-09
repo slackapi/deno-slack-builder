@@ -25,6 +25,7 @@ const run = async (walkieTalkie: Protocol) => {
     manifestOnly,
     workingDirectory,
     outputDirectory,
+    protocol: walkieTalkie,
   };
 
   walkieTalkie.log(options);
