@@ -35,7 +35,7 @@ export const MessageBoundaryProtocol = function (args: string[]): Protocol {
     warn: console.log,
     // deno-lint-ignore no-explicit-any
     respond: (data: any) => {
-      console.log(boundary + "\n" + JSON.stringify(data) + boundary);
+      console.log(boundary + "\n" + data + boundary);
     },
   };
 };
