@@ -1,8 +1,8 @@
 import { cleanManifest, createManifest } from "./manifest.ts";
 import { validateAndCreateFunctions } from "./functions.ts";
-import type { Options, Protocol } from "./types.ts";
+import type { Options } from "./types.ts";
 import { parse, path } from "./deps.ts";
-import { getProtocolInterface } from "./protocol.ts";
+import { getProtocolInterface, Protocol } from "./deps.ts";
 
 const run = async (walkieTalkie: Protocol) => {
   const start = Date.now();
