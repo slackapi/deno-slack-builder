@@ -97,29 +97,19 @@ async function readImportedManifestFile(options: Options, filename: string) {
   }
 
   let manifestJSFile;
-  // To enable userland logging, in case the protocol in use uses something
-  // other than stdout for diagnostic information, we stub over console.log
-  // with the negotiated protocol's logging implementation, just in case.
-  const originalLog = globalThis.console.log;
-  const originalWarn = globalThis.console.warn;
-  const originalError = globalThis.console.error;
-  globalThis.console.log = options.protocol.log;
-  globalThis.console.warn = options.protocol.warn;
-  globalThis.console.error = options.protocol.error;
+  // To enable userland logging, in case the negotiated protocol has unique rules
+  // around stdout/stderr usage, we provide the protocol an opportunity to install
+  // itself into the runtime (similar to a test framework using mocking helpers)
+  if (options.protocol.install) options.protocol.install();
   try {
     manifestJSFile = await import(`file://${manifestJSFilePath}`);
   } catch (err) {
-    // Restore original logging behaviour in case of exception.
-    globalThis.console.log = originalLog;
-    globalThis.console.warn = originalWarn;
-    globalThis.console.error = originalError;
+    // Restore original runtime behaviour by uninstalling any protocol runtime overrides, if necessary
+    if (options.protocol.uninstall) options.protocol.uninstall();
     throw err;
   }
-  // Restore original logging behaviour when everything is good too.
-  globalThis.console.log = originalLog;
-  globalThis.console.log = originalLog;
-  globalThis.console.warn = originalWarn;
-  globalThis.console.error = originalError;
+  // Restore original runtime behaviour by uninstalling any protocol runtime overrides, if necessary
+  if (options.protocol.uninstall) options.protocol.uninstall();
   if (manifestJSFile && manifestJSFile.default) {
     manifestJS = manifestJSFile.default;
   }
