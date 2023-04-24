@@ -1,5 +1,7 @@
 # deno-slack-builder
 
+⚠️ This repository is now archived. It has been superseded by https://github.com/slackapi-deno-slack-hooks.
+
 Library for building a Run on Slack Deno project. The artifacts produced from this library are what can be deployed as a Run on Slack project.
 
 ## Requirements
